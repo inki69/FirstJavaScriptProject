@@ -35,7 +35,7 @@ function handleRenderData(){
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-outline-danger" onclick="deleteProduct(${i})">
+                    <button class="btn btn-outline-danger" onclick="confirmDeleteProduct(${i})">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </td>
@@ -63,6 +63,27 @@ function updateProduct(index) {
     createBtn.textContent = "Update Product";
 }
 
+function confirmDeleteProduct(index) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteProduct(index);
+            Swal.fire(
+                'Deleted!',
+                'Your product has been deleted.',
+                'success'
+            )
+        }
+    })
+}
+
 function deleteProduct(index) {
     products.splice(index, 1);
     handleRenderData();
@@ -73,6 +94,17 @@ handleRenderData();
 
 productForm.onsubmit = function(event){
 event.preventDefault();
+
+if (!productName.value || !productCategory.value || !productPrice.value || !productDesc.value) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill out all fields!',
+    });
+    return;
+}
+
+
 var product={
     name:productName.value,
     cat: productCategory.value,
